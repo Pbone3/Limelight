@@ -6,9 +6,11 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
 {
     public class TestWhipProjectile : BaseWhipProjectile
     {
-        public override WhipProjectileProfile Stats => new WhipProjectileProfile(
+        public override WhipProjectileProfile Profile => new WhipProjectileProfile(
             rangeMulti: 0.85f,
             ropeColor: Color.Black,
+            segments: 20,
+            segmentDistributor: WhipProjectileProfile.Coolwhip,
             visuals: (projectile, whipPoints, timeToFlyOut) => {
                 // Make sure it doesn't happen before it gets not near the player
                 float quotient = useTimer / timeToFlyOut;

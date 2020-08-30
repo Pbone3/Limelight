@@ -9,22 +9,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Limelight.Projectiles.Weapons.Summoner.Whips
 {
-    public abstract class BaseWhipProjectile : LimelightProjectile
+    public abstract partial class BaseWhipProjectile : LimelightProjectile
     {
-        #region Structs
-        public struct WhipProjectileProfile
+        // Segments seem to break drawcode
+        // Known why, it's because you need certain distribution
+        #region Structs 
+        public partial struct WhipProjectileProfile
         {
+            #region Fields
             public int segmentAmounts;
             public float rangeMultiplier;
             public Color RopeColor;
             public Action<Projectile, List<Vector2>, float> Visuals;
+            public DistributeSegments SegmentDistributor;
+            #endregion
 
-            public WhipProjectileProfile(float rangeMulti, Color ropeColor, int segments = 20, Action<Projectile, List<Vector2>, float> visuals = default)
+            #region Methods and constructors
+            public WhipProjectileProfile(float rangeMulti, Color ropeColor, DistributeSegments segmentDistributor, int segments = 20, Action<Projectile, List<Vector2>, float> visuals = default)
             {
                 rangeMultiplier = rangeMulti;
                 segmentAmounts = segments;
                 RopeColor = ropeColor;
                 Visuals = visuals;
+                SegmentDistributor = segmentDistributor;
             }
 
             // Note: Keep in 1.4, relies on custom struct
@@ -34,6 +41,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                 segments = segmentAmounts;
                 rangeMulti = rangeMultiplier;
             }
+            #endregion
         }
         #endregion
 
@@ -66,7 +74,9 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         #region Overridable Members
         public virtual void SaferSetDefaults() { }
         public virtual void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit) { }
-        public virtual WhipProjectileProfile Stats => default;
+        public virtual bool PreDrawRope(List<Vector2> whipPoints, SpriteBatch spriteBatch) => true;
+        public virtual bool PreDrawWhip(List<Vector2> whipPoints, SpriteBatch spriteBatch) => true;
+        public virtual WhipProjectileProfile Profile => default;
         #endregion
 
         public override void SafeSetDefaults()
@@ -115,7 +125,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         // Note: Keep in 1.4, relies on custom  struct
         public void FillWhipControlPoints(List<Vector2> controlPoints)
         {
-            Stats.GetWhipInfo(projectile, out float timeToFlyOut, out int segments, out float rangeMultiplier);
+            Profile.GetWhipInfo(projectile, out float timeToFlyOut, out int segments, out float rangeMultiplier);
             float num = useTimer / timeToFlyOut;
             float num2 = 0.5f;
             float num3 = 1f + num2;
@@ -170,7 +180,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         public override void AI()
         {
             // Get variables required for AI
-            Stats.GetWhipInfo(projectile, out float timeToFlyOut, out int _, out float _);
+            Profile.GetWhipInfo(projectile, out float timeToFlyOut, out int _, out float _);
 
             // Rotation and increment the timer
             projectile.rotation = projectile.velocity.ToRotation() + (float)MathHelper.PiOver2;
@@ -201,12 +211,11 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                 Main.PlaySound(/*SoundID.Item153*/SoundID.Item1, position);
             }
 
-            // TODO: Seems to be whip related visuals, adapt (action in the profile)
-            if (Stats.Visuals != default)
+            if (Profile.Visuals != default)
             {
                 _whipPointsForCollision.Clear();
                 FillWhipControlPoints(_whipPointsForCollision);
-                Stats.Visuals.Invoke(projectile, _whipPointsForCollision, timeToFlyOut);
+                Profile.Visuals.Invoke(projectile, _whipPointsForCollision, timeToFlyOut);
             }
         }
 
@@ -216,8 +225,8 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
             List<Vector2> whipPoints = new List<Vector2>();
             FillWhipControlPoints(whipPoints);
 
-            DrawRope(whipPoints, spriteBatch);
-            DrawWhip(whipPoints, spriteBatch);
+            if (PreDrawRope(whipPoints, spriteBatch)) DrawRope(whipPoints, spriteBatch);
+            if (PreDrawWhip(whipPoints, spriteBatch))DrawWhip(whipPoints, spriteBatch);
 
             return false;
         }
@@ -228,7 +237,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
             Texture2D fishingLineTex = Main.fishingLineTexture;
             Rectangle fishingLineTextureFrame = fishingLineTex.Frame();
             Vector2 origin = new Vector2(fishingLineTextureFrame.Width / 2, 2f);
-            Color originalColor = Stats.RopeColor;
+            Color originalColor = Profile.RopeColor;
 
             for (int i = 0; i < whipPoints.Count - 1; i++)
             {
@@ -246,59 +255,34 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         }
         public Vector2 DrawWhip(List<Vector2> whipPoints, SpriteBatch spriteBatch)
         {
-            Texture2D value = Main.projectileTexture[projectile.type];
-            Rectangle frame = value.Frame(1, 5);
-            Vector2 vector = frame.Size() / 2f;
-            Vector2 vector2 = whipPoints[0];
+            Texture2D texture = Main.projectileTexture[projectile.type];
+            Rectangle frame = texture.Frame(1, 5);
+            Vector2 origin = frame.Size() / 2f;
+            Vector2 worldPosition = whipPoints[0];
             int height = frame.Height;
             frame.Height -= 2;
 
             for (int i = 0; i < whipPoints.Count - 1; i++)
             {
-                bool flag = true;
-                Vector2 origin = vector;
-                switch (i)
-                {
-                    case 0:
-                        origin.Y -= 4f;
-                        break;
-                    case 3:
-                    case 5:
-                    case 7:
-                        frame.Y = height;
-                        break;
-                    case 9:
-                    case 11:
-                    case 13:
-                        frame.Y = height * 2;
-                        break;
-                    case 15:
-                    case 17:
-                        frame.Y = height * 3;
-                        break;
-                    case 19:
-                        frame.Y = height * 4;
-                        break;
-                    default:
-                        flag = false;
-                        break;
-                }
-
-                Vector2 vector3 = whipPoints[i];
-                Vector2 vector4 = whipPoints[i + 1] - vector3;
+                Vector2 volatileOrigin = origin;
+                float scale = 1f;
+                bool flag = Profile.SegmentDistributor.Invoke(ref i, ref frame, ref height, ref volatileOrigin, ref scale, ref whipPoints, ref Main.projectile[projectile.whoAmI]);
+                
+                Vector2 currentPoint = whipPoints[i];
+                Vector2 nextPointDifference = whipPoints[i + 1] - currentPoint;
                 if (flag)
                 {
-                    float rotation = vector4.ToRotation() - (float)Math.PI / 2f;
-                    Point lightPosition = vector3.ToTileCoordinates();
+                    float rotation = nextPointDifference.ToRotation() - (float)MathHelper.PiOver2;
+                    Point lightPosition = currentPoint.ToTileCoordinates();
                     Color drawColor = projectile.GetAlpha(Lighting.GetColor(lightPosition.X, lightPosition.Y));
 
-                    spriteBatch.Draw(value, vector2 - Main.screenPosition, frame, drawColor, rotation, origin, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, worldPosition - Main.screenPosition, frame, drawColor, rotation, volatileOrigin, scale, SpriteEffects.None, 0f);
                 }
 
-                vector2 += vector4;
+                worldPosition += nextPointDifference;
             }
 
-            return vector2;
+            return worldPosition;
         }
         #endregion
 
