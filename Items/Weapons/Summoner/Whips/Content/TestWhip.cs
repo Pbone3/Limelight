@@ -20,7 +20,7 @@ namespace Limelight.Items.Weapons.Summoner.Whips.Content
             dmg: 100,
             kb: 10,
             velocity: 16f,
-            animationTime: 20,
+            animationTime: 30,
             proj: ModContent.ProjectileType<TestWhipProjectile>()
             );
     }

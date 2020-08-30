@@ -7,10 +7,10 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
     public class TestWhipProjectile : BaseWhipProjectile
     {
         public override WhipProjectileProfile Profile => new WhipProjectileProfile(
-            rangeMulti: 0.85f,
+            rangeMulti: 0.75f,
             ropeColor: Color.Black,
-            segments: 20,
-            segmentDistributor: WhipProjectileProfile.Coolwhip,
+            segments: 40,
+            segmentDistributor: WhipProjectileProfile.RainbowWhip,
             visuals: (projectile, whipPoints, timeToFlyOut) => {
                 // Make sure it doesn't happen before it gets not near the player
                 float quotient = useTimer / timeToFlyOut;
@@ -20,11 +20,17 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
                     if (Main.rand.NextBool(3))
                     {
                         // Makes it at the point
+
                         Rectangle rect = Utils.CenteredRectangle(whipPoints[whipPoints.Count - 1], new Vector2(20f, 20f));
                         Dust.NewDust(rect.TopLeft(), rect.Width, rect.Height, 16);
                     }
                 }
             }
             );
+
+        public override void SaferSetDefaults()
+        {
+            //projectile.extraUpdates = 1;
+        }
     }
 }

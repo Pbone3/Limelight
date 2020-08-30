@@ -16,6 +16,18 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         #region Structs 
         public partial struct WhipProjectileProfile
         {
+            /* Notes:
+            Vanilla Range Multipliers: (defaults to 1f)
+             Firecracker  : 1.2f
+             Cool Whip    : 1.3f
+             Leather Whip : 0.75f
+             Snapthorn    : 0.9f
+             Durendal     : 1.2f
+             Dark Harvest : 1.2f (30 segments)
+             Kaleidoscope : 1.5f (40 segments)
+             Morning Star : 0.6f
+            */
+
             #region Fields
             public int segmentAmounts;
             public float rangeMultiplier;
@@ -79,7 +91,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
         public virtual WhipProjectileProfile Profile => default;
         #endregion
 
-        public override void SafeSetDefaults()
+        public sealed override void SafeSetDefaults()
         {
             projectile.Size = new Vector2(18f);
             projectile.friendly = true;
