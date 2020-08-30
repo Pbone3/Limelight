@@ -17,13 +17,14 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
             public int segmentAmounts;
             public float rangeMultiplier;
             public Color RopeColor;
+            public Action<Projectile, List<Vector2>, float> Visuals;
 
-
-            public WhipProjectileProfile(float rangeMulti, Color ropeColor, int segments = 20)
+            public WhipProjectileProfile(float rangeMulti, Color ropeColor, int segments = 20, Action<Projectile, List<Vector2>, float> visuals = default)
             {
                 rangeMultiplier = rangeMulti;
                 segmentAmounts = segments;
                 RopeColor = ropeColor;
+                Visuals = visuals;
             }
 
             // Note: Keep in 1.4, relies on custom struct
@@ -201,197 +202,11 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
             }
 
             // TODO: Seems to be whip related visuals, adapt (action in the profile)
-            switch (projectile.type)
+            if (Stats.Visuals != default)
             {
-                case 848:
-                    {
-                        float t2 = useTimer / timeToFlyOut;
-                        float num2 = Helpers.GetLerpValue(0.1f, 0.7f, t2, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t2, clamped: true);
-                        if (num2 > 0.1f && Main.rand.NextFloat() < num2 / 2f)
-                        {
-                            _whipPointsForCollision.Clear();
-                            FillWhipControlPoints(_whipPointsForCollision);
-                            Rectangle r2 = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(30f, 30f));
-                            int num3 = Dust.NewDust(r2.TopLeft(), r2.Width, r2.Height, 172, 0f, 0f, 100, default(Color), 1.5f);
-                            Main.dust[num3].noGravity = true;
-                            Main.dust[num3].velocity.X /= 2f;
-                            Main.dust[num3].velocity.Y /= 2f;
-                        }
-
-                        break;
-                    }
-                case 847:
-                    {
-                        float t4 = useTimer / timeToFlyOut;
-                        if (Helpers.GetLerpValue(0.1f, 0.7f, t4, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t4, clamped: true) > 0.5f && Main.rand.Next(3) != 0)
-                        {
-                            _whipPointsForCollision.Clear();
-                            FillWhipControlPoints(_whipPointsForCollision);
-                            int num5 = Main.rand.Next(_whipPointsForCollision.Count - 10, _whipPointsForCollision.Count);
-                            Rectangle r4 = Utils.CenteredRectangle(_whipPointsForCollision[num5], new Vector2(30f, 30f));
-                            int num6 = 57;
-                            if (Main.rand.Next(3) == 0)
-                                num6 = 43;
-
-                            Dust dust4 = Dust.NewDustDirect(r4.TopLeft(), r4.Width, r4.Height, num6, 0f, 0f, 100, Color.White);
-                            dust4.position = _whipPointsForCollision[num5];
-                            dust4.fadeIn = 0.3f;
-                            Vector2 spinningpoint = _whipPointsForCollision[num5] - _whipPointsForCollision[num5 - 1];
-                            dust4.noGravity = true;
-                            dust4.velocity *= 0.5f;
-                            dust4.velocity += spinningpoint.RotatedBy((float)owner.direction * ((float)Math.PI / 2f));
-                            dust4.velocity *= 0.5f;
-                        }
-
-                        break;
-                    }
-                case 849:
-                    {
-                        float num8 = useTimer / timeToFlyOut;
-                        Helpers.GetLerpValue(0.1f, 0.7f, num8, clamped: true);
-                        Helpers.GetLerpValue(0.9f, 0.7f, num8, clamped: true);
-                        if (num8 > 0.4f && Main.rand.Next(9) != 0)
-                        {
-                            _whipPointsForCollision.Clear();
-                            FillWhipControlPoints(_whipPointsForCollision);
-                            Rectangle r6 = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(30f, 30f));
-                            Vector2 vector = _whipPointsForCollision[_whipPointsForCollision.Count - 2].DirectionTo(_whipPointsForCollision[_whipPointsForCollision.Count - 1]).SafeNormalize(Vector2.Zero);
-                            Dust dust7 = Dust.NewDustDirect(r6.TopLeft(), r6.Width, r6.Height, 191, 0f, 0f, 0, default(Color), 1.3f);
-                            dust7.noGravity = true;
-                            dust7.velocity += vector * 2f;
-                            if (Main.rand.Next(2) == 0)
-                            {
-                                /*ParticleOrchestrator.RequestParticleSpawn(clientOnly: true, ParticleOrchestraType.BlackLightningSmall, new ParticleOrchestraSettings
-                                {
-                                    MovementVector = vector,
-                                    PositionInWorld = r6.Center.ToVector2()
-                                }, owner);*/
-                            }
-
-                            Lighting.AddLight(r6.Center.ToVector2(), new Vector3(0.2f, 0f, 0.4f));
-                        }
-
-                        break;
-                    }
-                case 915:
-                    {
-                        float t6 = useTimer / timeToFlyOut;
-                        if (Helpers.GetLerpValue(0.1f, 0.7f, t6, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t6, clamped: true) > 0.1f)
-                        {
-                            _whipPointsForCollision.Clear();
-                            FillWhipControlPoints(_whipPointsForCollision);
-                            Rectangle r7 = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(30f, 30f));
-                            Vector2 value4 = _whipPointsForCollision[_whipPointsForCollision.Count - 2].DirectionTo(_whipPointsForCollision[_whipPointsForCollision.Count - 1]).SafeNormalize(Vector2.Zero);
-                            /*Dust dust8 = Dust.NewDustDirect(r7.TopLeft(), r7.Width, r7.Height, 267, 0f, 0f, 0, Main.hslToRgb(owner.miscCounterNormalized * 9f % 1f, 1f, 0.5f), 1.3f);
-                            dust8.velocity *= Main.rand.NextFloat() * 0.8f;
-                            dust8.noGravity = true;
-                            dust8.scale = 0.9f + Main.rand.NextFloat() * 0.9f;
-                            dust8.fadeIn = Main.rand.NextFloat() * 0.9f;
-                            dust8.velocity += value4 * 2f;
-                            if (dust8.dustIndex != 6000)
-                            {
-                                Dust dust9 = Dust.CloneDust(dust8);
-                                dust9.scale /= 2f;
-                                dust9.fadeIn *= 0.85f;
-                                dust9.color = new Color(255, 255, 255, 255);
-                            }*/
-                        }
-
-                        break;
-                    }
-                case 914:
-                    {
-                        float t3 = useTimer / timeToFlyOut;
-                        float num4 = Helpers.GetLerpValue(0.1f, 0.7f, t3, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t3, clamped: true);
-                        if (num4 > 0.1f && Main.rand.NextFloat() < num4 / 2f)
-                        {
-                            _whipPointsForCollision.Clear();
-                            FillWhipControlPoints(_whipPointsForCollision);
-                            Rectangle r3 = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(30f, 30f));
-                            Vector2 value2 = _whipPointsForCollision[_whipPointsForCollision.Count - 2].DirectionTo(_whipPointsForCollision[_whipPointsForCollision.Count - 1]).SafeNormalize(Vector2.Zero);
-                            Dust dust3 = Dust.NewDustDirect(r3.TopLeft(), r3.Width, r3.Height, 39, 0f, 0f, 0, default(Color), 1.2f);
-                            dust3.noGravity = (Main.rand.Next(3) == 0);
-                            dust3.velocity += value2 * 2f;
-                        }
-
-                        break;
-                    }
-                case 912:
-                    {
-                        float t5 = useTimer / timeToFlyOut;
-                        float num7 = Helpers.GetLerpValue(0.1f, 0.7f, t5, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t5, clamped: true);
-                        if (!(num7 > 0.1f) || !(Main.rand.NextFloat() < num7 / 2f))
-                            break;
-
-                        _whipPointsForCollision.Clear();
-                        FillWhipControlPoints(_whipPointsForCollision);
-                        Rectangle r5 = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(30f, 30f));
-                        Vector2 value3 = _whipPointsForCollision[_whipPointsForCollision.Count - 2].DirectionTo(_whipPointsForCollision[_whipPointsForCollision.Count - 1]).SafeNormalize(Vector2.Zero);
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Dust dust5 = Dust.NewDustDirect(r5.TopLeft(), r5.Width, r5.Height, 16, 0f, 0f, 0, default(Color), 1.2f);
-                            dust5.noGravity = true;
-                            dust5.velocity += value3 * 2f;
-                        }
-
-                        for (int k = 0; k < 1; k++)
-                        {
-                            Dust.NewDustDirect(r5.TopLeft(), r5.Width, r5.Height, 13, 0f, 0f, 0, default(Color), 0.8f).velocity += value3 * 2f;
-                        }
-
-                        for (int l = 0; l < 3; l++)
-                        {
-                            if (Main.rand.Next(2) != 0)
-                            {
-                                Dust dust6 = Dust.NewDustDirect(r5.TopLeft(), r5.Width, r5.Height, 261, 0f, 0f, 0, Color.Transparent, 0.8f);
-                                dust6.velocity += value3 * 2f;
-                                dust6.velocity *= 0.3f;
-                                dust6.noGravity = true;
-                            }
-                        }
-
-                        Lighting.AddLight(r5.Center.ToVector2(), new Vector3(0.1f, 0.1f, 0.2f));
-                        break;
-                    }
-                case 913:
-                    {
-                        float t = useTimer / timeToFlyOut;
-                        float num = Helpers.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t, clamped: true);
-                        if (!(num > 0.1f) || !(Main.rand.NextFloat() < num))
-                            break;
-
-                        _whipPointsForCollision.Clear();
-                        FillWhipControlPoints(_whipPointsForCollision);
-                        Rectangle r = Utils.CenteredRectangle(_whipPointsForCollision[_whipPointsForCollision.Count - 1], new Vector2(20f, 20f));
-                        Vector2 value = _whipPointsForCollision[_whipPointsForCollision.Count - 2].DirectionTo(_whipPointsForCollision[_whipPointsForCollision.Count - 1]).SafeNormalize(Vector2.Zero);
-                        for (int i = 0; i < 3; i++)
-                        {
-                            if (Main.rand.Next(3) != 0)
-                                continue;
-
-                            if (Main.rand.Next(7) == 0)
-                            {
-                                Dust dust = Dust.NewDustDirect(r.TopLeft(), r.Width, r.Height, 31);
-                                dust.velocity.X /= 2f;
-                                dust.velocity.Y /= 2f;
-                                dust.velocity += value * 2f;
-                                dust.fadeIn = 1f + Main.rand.NextFloat() * 0.6f;
-                                dust.noGravity = true;
-                                continue;
-                            }
-
-                            Dust dust2 = Dust.NewDustDirect(r.TopLeft(), r.Width, r.Height, 6, 0f, 0f, 0, default(Color), 1.2f);
-                            dust2.velocity += value * 2f;
-                            if (Main.rand.Next(3) != 0)
-                            {
-                                dust2.fadeIn = 0.7f + Main.rand.NextFloat() * 0.9f;
-                                dust2.scale = 0.6f;
-                                dust2.noGravity = true;
-                            }
-                        }
-
-                        break;
-                    }
+                _whipPointsForCollision.Clear();
+                FillWhipControlPoints(_whipPointsForCollision);
+                Stats.Visuals.Invoke(projectile, _whipPointsForCollision, timeToFlyOut);
             }
         }
 
