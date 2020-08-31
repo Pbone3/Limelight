@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Limelight.Utilities
 {
-    public static class Helpers
+    public static class Helper
     {
 		public static float GetLerpValue(float from, float to, float t, bool clamped = false)
 		{

@@ -14,7 +14,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
             visuals: (projectile, whipPoints, timeToFlyOut) => {
                 // Make sure it doesn't happen before it gets not near the player
                 float quotient = useTimer / timeToFlyOut;
-                if (Helpers.GetLerpValue(0.1f, 0.7f, quotient, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, quotient, clamped: true) > 0.5f && Main.rand.Next(3) != 0)
+                if (Helper.GetLerpValue(0.1f, 0.7f, quotient, clamped: true) * Helper.GetLerpValue(0.9f, 0.7f, quotient, clamped: true) > 0.5f && Main.rand.Next(3) != 0)
                 {
                     // Doing it every frame is a little absurb, add randomness
                     if (Main.rand.NextBool(3))
@@ -30,7 +30,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
 
         public override void SaferSetDefaults()
         {
-            //projectile.extraUpdates = 1;
+            projectile.extraUpdates = 2;
         }
     }
 }

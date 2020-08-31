@@ -7,7 +7,7 @@ namespace Limelight.Items.Weapons.Summoner.Whips.Content
 {
     public class TestWhip : BaseWhip
     {
-        public override string ItemName => "Test whip";
+        //spublic override string ItemName => "Test whip";
         public override int TagDamage => 5;
         public override int TagCritChance => 10;
         public override string SpecialEffect => "Does whatever pbone needs";

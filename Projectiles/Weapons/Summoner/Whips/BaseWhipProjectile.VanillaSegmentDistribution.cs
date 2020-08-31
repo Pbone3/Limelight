@@ -180,7 +180,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                     whip.Profile.GetWhipInfo(projectile, out float timeToFlyOut, out int _, out float _);
 
                     float t = projectile.ai[0] / timeToFlyOut;
-                    float amount = Helpers.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t, clamped: true);
+                    float amount = Helper.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helper.GetLerpValue(0.9f, 0.7f, t, clamped: true);
                     scale = MathHelper.Lerp(0.5f, 2f, amount);
                     ret = true;
                 }
@@ -220,7 +220,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                     whip.Profile.GetWhipInfo(projectile, out float timeToFlyOut, out int _, out float _);
 
                     float t = projectile.ai[0] / timeToFlyOut;
-                    float amount = Helpers.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t, clamped: true);
+                    float amount = Helper.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helper.GetLerpValue(0.9f, 0.7f, t, clamped: true);
                     scale = MathHelper.Lerp(0.5f, 1.5f, amount);
                     ret = true;
                 }
@@ -260,7 +260,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                     whip.Profile.GetWhipInfo(projectile, out float timeToFlyOut, out int _, out float _);
 
                     float t = projectile.ai[0] / timeToFlyOut;
-                    float amount = Helpers.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helpers.GetLerpValue(0.9f, 0.7f, t, clamped: true);
+                    float amount = Helper.GetLerpValue(0.1f, 0.7f, t, clamped: true) * Helper.GetLerpValue(0.9f, 0.7f, t, clamped: true);
                     scale = MathHelper.Lerp(0.5f, 1.5f, amount);
                     ret = true;
                 }
