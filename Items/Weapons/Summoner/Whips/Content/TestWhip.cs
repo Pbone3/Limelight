@@ -7,11 +7,9 @@ namespace Limelight.Items.Weapons.Summoner.Whips.Content
 {
     public class TestWhip : BaseWhip
     {
-        //spublic override string ItemName => "Test whip";
+        public override string LocalizationKey => "TestWhip";
         public override int TagDamage => 5;
         public override int TagCritChance => 10;
-        public override string SpecialEffect => "Does whatever pbone needs";
-        //public override string Tagline => "'Example GOD'"; <I need to test not having a line>
 
         public override ShopProfile ShopStats => new ShopProfile(
             rare: ItemRarityID.Green,

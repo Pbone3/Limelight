@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Terraria;
+using Microsoft.Xna.Framework;
 
-namespace Limelight.Items.Tools.GrapplingHooks
+namespace Limelight.Items.Tools.GrapplingHooks.Content
 {
     public class MahoganyHook : BaseGrapplingHook
     {

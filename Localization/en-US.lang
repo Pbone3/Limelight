@@ -1,3 +1,11 @@
-﻿//Tooltips
-TooltipPiece.SummonTagDamage=summon tag damage
-TooltipPiece.SummonCritChance=summon tag critical strike chance
+﻿//Item Names
+ItemName.TestWhip=Test Whip
+ItemName.MahoganyHook=Mahogany Hook
+
+//Whip Info
+Whip.TestWhip.SpecialEffect= 
+Whip.TestWhip.Tagline='Does whatever pbone needs'
+
+//Tooltips
+TooltipPiece.SummonTagDamage={0} summon tag damage
+TooltipPiece.SummonCritChance={0}% summon tag critical strike chance

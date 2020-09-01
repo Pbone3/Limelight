@@ -7,7 +7,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
     public class TestWhipProjectile : BaseWhipProjectile
     {
         public override WhipProjectileProfile Profile => new WhipProjectileProfile(
-            rangeMulti: 0.75f,
+            rangeMulti: 1.5f,
             ropeColor: Color.Black,
             segments: 40,
             segmentDistributor: WhipProjectileProfile.RainbowWhip,
@@ -20,7 +20,6 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips.Content
                     if (Main.rand.NextBool(3))
                     {
                         // Makes it at the point
-
                         Rectangle rect = Utils.CenteredRectangle(whipPoints[whipPoints.Count - 1], new Vector2(20f, 20f));
                         Dust.NewDust(rect.TopLeft(), rect.Width, rect.Height, 16);
                     }

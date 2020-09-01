@@ -255,7 +255,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
             {
                 Vector2 query = whipPoints[i];
                 Vector2 difference = whipPoints[i + 1] - query;
-                float rotation = difference.ToRotation() - (float)MathHelper.PiOver2;
+                float rotation = difference.ToRotation() - MathHelper.PiOver2;
                 Point lightPoint = query.ToTileCoordinates();
 
                 Color color = Lighting.GetColor(lightPoint.X, lightPoint.Y, originalColor);
@@ -284,7 +284,7 @@ namespace Limelight.Projectiles.Weapons.Summoner.Whips
                 Vector2 nextPointDifference = whipPoints[i + 1] - currentPoint;
                 if (flag)
                 {
-                    float rotation = nextPointDifference.ToRotation() - (float)MathHelper.PiOver2;
+                    float rotation = nextPointDifference.ToRotation() - MathHelper.PiOver2;
                     Point lightPosition = currentPoint.ToTileCoordinates();
                     Color drawColor = projectile.GetAlpha(Lighting.GetColor(lightPosition.X, lightPosition.Y));
 

@@ -31,18 +31,21 @@ namespace Limelight.Items.Weapons.Summoner.Whips
         }
         #endregion
 
-        #region Localization Keys
+        #region Localization
         public const string Key_SummonTagDamage = "Mods.Limelight.TooltipPiece.SummonTagDamage";
         public const string Key_SummonCritChance = "Mods.Limelight.TooltipPiece.SummonCritChance";
+        public const string Key_Whip = "Mods.Limelight.Whip";
         public const string Key_CommonWhipTooltip = "CommonItemTooltip.Whips";
+
+        public string LocalizedName => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.Name");
+        public string LocalizedSpecialEffect => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.SpecialEffect");
+        public string LocalizedTagline => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.Tagline");
         #endregion
 
         #region Overridable Members
-        public virtual string ItemName => "";
+        public virtual string LocalizationKey => "";
         public virtual int TagDamage => 0;
         public virtual int TagCritChance => 0;
-        public virtual string SpecialEffect => "";
-        public virtual string Tagline => "";
 
         public virtual WhipProfile Stats => default;
         public virtual void SaferSetDefaults() { }
@@ -82,33 +85,29 @@ namespace Limelight.Items.Weapons.Summoner.Whips
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             tooltips.TryModify(
-                (TooltipLine tt) => tt.Name.Equals("ItemName"),
-                (TooltipLine tt) => tt.text = ItemName
+                DefaultPredicate("Tag damage line"),
+                DefaultAction(TagDamage, Language.GetTextValue(Key_SummonTagDamage, TagDamage))
                 );
 
             tooltips.TryModify(
-                ModifyTooltips_DefaultPredicate("Tag damage line"),
-                ModifyTooltips_DefaultAction(TagDamage, $"{TagDamage} {Language.GetTextValue(Key_SummonTagDamage)}")
+                DefaultPredicate("Tag crit line"),
+                DefaultAction(TagCritChance, Language.GetTextValue(Key_SummonCritChance, TagCritChance))
                 );
 
-            tooltips.TryModify(
-                ModifyTooltips_DefaultPredicate("Tag crit line"),
-                ModifyTooltips_DefaultAction(TagCritChance, $"{TagCritChance} {Language.GetTextValue(Key_SummonCritChance)}")
-                );
+                tooltips.TryModify(
+                    DefaultPredicate("Special effect line"),
+                    DefaultAction(!LocalizedSpecialEffect.Equals(" ") ? LocalizedSpecialEffect : "")
+                    );
 
-            tooltips.TryModify(
-                ModifyTooltips_DefaultPredicate("Special effect line"),
-                ModifyTooltips_DefaultAction(SpecialEffect)
-                );
-
-            tooltips.TryModify(
-                ModifyTooltips_DefaultPredicate("Tagline line"),
-                ModifyTooltips_DefaultAction(Tagline)
-                );
+                tooltips.TryModify(
+                    DefaultPredicate("Tagline line"),
+                    DefaultAction(!LocalizedTagline.Equals(" ") ? LocalizedTagline : "")
+                    );
         }
 
-        private Func<TooltipLine, bool> ModifyTooltips_DefaultPredicate(string textToFind) => (TooltipLine tt) => tt.text.Equals(textToFind);
-        private Action<TooltipLine> ModifyTooltips_DefaultAction(int value, string text) => (TooltipLine tt) => tt.text = (value > 0 ? text : "");
-        private Action<TooltipLine> ModifyTooltips_DefaultAction(string text) => (TooltipLine tt) => tt.text = text;
+        private Func<TooltipLine, bool> DefaultPredicate(string textToFind) => (TooltipLine tt) => tt.text.Equals(textToFind);
+        private Action<TooltipLine> DefaultAction(int value, string text) => (TooltipLine tt) => tt.text = (value > 0 ? text : "");
+        private Action<TooltipLine> DefaultAction(string text) => (TooltipLine tt) => tt.text = text;
+        private string TextValue(string key) => Language.GetTextValue(key);
     }
 }

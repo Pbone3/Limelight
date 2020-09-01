@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Limelight.Items.Tools.GrapplingHooks
 {
-    public class BaseGrapplingHook : Limelight
+    public abstract class BaseGrapplingHook : LimelightItem
     {
 
     }
