@@ -7,7 +7,6 @@ namespace Limelight.Items.Weapons.Summoner.Whips.Content
 {
     public class TestWhip : BaseWhip
     {
-        public override string LocalizationKey => "TestWhip";
         public override int TagDamage => 5;
         public override int TagCritChance => 10;
 

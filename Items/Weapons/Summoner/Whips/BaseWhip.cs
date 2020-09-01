@@ -37,13 +37,12 @@ namespace Limelight.Items.Weapons.Summoner.Whips
         public const string Key_Whip = "Mods.Limelight.Whip";
         public const string Key_CommonWhipTooltip = "CommonItemTooltip.Whips";
 
-        public string LocalizedName => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.Name");
-        public string LocalizedSpecialEffect => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.SpecialEffect");
-        public string LocalizedTagline => TextValue($"{TextValue(Key_Whip)}.{LocalizationKey}.Tagline");
+        public string LocalizedName => TextValue($"{TextValue(Key_Whip)}.{Name}.Name");
+        public string LocalizedSpecialEffect => TextValue($"{TextValue(Key_Whip)}.{Name}.SpecialEffect");
+        public string LocalizedTagline => TextValue($"{TextValue(Key_Whip)}.{Name}.Tagline");
         #endregion
 
         #region Overridable Members
-        public virtual string LocalizationKey => "";
         public virtual int TagDamage => 0;
         public virtual int TagCritChance => 0;
 
